@@ -6,8 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.EditText
-import androidx.navigation.Navigation.findNavController
+import android.widget.TextView
 import androidx.navigation.fragment.findNavController
 
 // TODO: Rename parameter arguments, choose names that match
@@ -17,15 +16,18 @@ private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [FirstFragment.newInstance] factory method to
+ * Use the [ThirdFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class FirstFragment : Fragment() {
+class ThirdFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    private var btnNext: Button?=null
-    var etName:EditText?= null
+    private var btnBack2: Button?= null
+    var tvName:TextView?= null
+    var tvRollNo:TextView?= null
+    lateinit var name: String
+    var rollNo=0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,23 +42,25 @@ class FirstFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_first, container, false)
+        return inflater.inflate(R.layout.fragment_third, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        btnNext=view.findViewById(R.id.btnNext)
-        etName=view.findViewById<EditText>(R.id.etName)
-        btnNext?.setOnClickListener{
-            if (etName?.text.toString().isNullOrEmpty()){
-                etName?.error="Please enter the name"
-            }
-            else {
-                val bundle = Bundle()
-                bundle.putString("name", etName?.text.toString())
-                findNavController().navigate(R.id.secondFragment, bundle)
-            }
+        arguments?.let {
+             name=it.getString("name")?:""
+            rollNo=it.getInt("number",0)
+            println("name: $name")
         }
+        tvName=view.findViewById<TextView>(R.id.tvName)
+        tvRollNo=view.findViewById<TextView>(R.id.tvRollNo)
+        tvName?.setText("$name")
+        tvRollNo?.setText("$rollNo")
+        btnBack2=view.findViewById(R.id.btnBack2)
+        btnBack2?.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
     }
 
     companion object {
@@ -66,12 +70,12 @@ class FirstFragment : Fragment() {
          *
          * @param param1 Parameter 1.
          * @param param2 Parameter 2.
-         * @return A new instance of fragment FirstFragment.
+         * @return A new instance of fragment ThirdFragment.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            FirstFragment().apply {
+            ThirdFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, param1)
                     putString(ARG_PARAM2, param2)

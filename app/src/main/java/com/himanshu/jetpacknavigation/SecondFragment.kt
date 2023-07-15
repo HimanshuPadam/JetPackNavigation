@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import androidx.navigation.fragment.findNavController
 
 // TODO: Rename parameter arguments, choose names that match
@@ -23,6 +24,9 @@ class SecondFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     private var btnBack: Button?= null
+    private var btnNext: Button?= null
+    var etRollNo:EditText?=null
+    var name=""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,10 +46,26 @@ class SecondFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        arguments?.let {
+            name = it.getString("name") ?: ""
+        }
         btnBack=view.findViewById(R.id.btnBack)
+        btnNext=view.findViewById(R.id.btnNext)
+        etRollNo=view.findViewById(R.id.etRollNo)
         btnBack?.setOnClickListener {
             findNavController().popBackStack()
         }
+        btnNext?.setOnClickListener {
+            if (etRollNo?.text.toString().isNullOrEmpty()) {
+                etRollNo?.error="Please enter the roll number"
+            } else {
+                var bundle = Bundle()
+                bundle.putInt("number", etRollNo?.text.toString().toInt())
+                bundle.putString("name",name)
+                findNavController().navigate(R.id.thirdFragment, bundle)
+            }
+        }
+
     }
 
     companion object {
